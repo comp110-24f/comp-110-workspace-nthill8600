@@ -1,19 +1,22 @@
 """File to define River class."""
 
-____author___: str = "730653429"
+__author__: str = "730653429"
 
+from exercises.ex07.fish import Fish
+from exercises.ex07.bear import Bear
 
-from ex07.fish import Fish
-from ex07.bear import Bear
+"""To import the fish and bear classes to the river."""
 
 
 class River:
+    """Defining the river that has fish and bears."""
+
     day: int
     fish: list[Fish]
     bears: list[Bear]
 
     def __init__(self, num_fish: int, num_bears: int):
-        """New River with num_fish Fish and num_bears Bears"""
+        """New River with num_fish Fish and num_bears Bears."""
         self.day: int = 0
         self.fish: list[Fish] = []
         self.bears: list[Bear] = []
@@ -24,79 +27,92 @@ class River:
             self.bears.append(Bear())
 
     def one_river_week(self):
-        days_passed = 0
-        while days_passed < 7:
-            self.one_river_day()
-            days_passed += 1
-        return None
+        """To go through seven days of the river."""
+        self.one_river_day()
+        self.one_river_day()
+        self.one_river_day()
+        self.one_river_day()
+        self.one_river_day()
+        self.one_river_day()
+        self.one_river_day()
 
     def check_ages(self):
-        new_fish: list[str] = []
+        """Checks the age the animals, as animals die with age."""
+        surviving_fish = []  # start a new list of surviving fish
 
         for fish in self.fish:
-            if fish.age <= 3:  # type: ignore
-                new_fish.append(fish)  # type: ignore
+            if fish.age <= 3:  # type: ignore # if the fish are over 3 they dont survive
+                surviving_fish.append(
+                    fish
+                )  # add the fish under 3 to the surviving list
 
-        self.fish = new_fish  # type: ignore #
-
-        new_bear: list[str] = []
-
+        surviving_bears = []  # new list of surviving bears
         for bear in self.bears:
             if bear.age <= 5:
-                new_bear.append(bear)  # type: ignore
+                surviving_bears.append(
+                    bear
+                )  # add bears to list if they are under 5 yrs old
 
-        self.bear = new_bear
-
+        self.fish = surviving_fish
+        self.bears = surviving_bears
         return None
 
     def remove_fish(self, amount: int) -> None:
-        for index in range(min(amount, len(self.fish))):  # type: ignore
-            self.fish.pop(0)
+        """To remove an amount of fish from the river."""
+        if len(self.fish) >= amount:
+            self.fish = self.fish[amount:]  # remove the amount of fish
+        else:
+            self.fish = []  # if there are no fish left
         return None
 
     def bears_eating(self):
-        fish_count: int = len(self.fish)
+        """To simulate a bear eating 3 fish."""
         for bear in self.bears:
-            if fish_count >= 5:
-                self.remove_fish(3)
-                bear.eat(3)
-                fish_count -= 3
+            if len(self.fish) >= 5:
+                self.remove_fish(3)  # the bear ate 3 fish
+                bear.eat(3)  # call the eat function in the Bear class
             else:
                 return None
         return None
 
     def check_hunger(self):
-        surviving_bears: list[Bear] = []
+        """To check if the bears are starved to death."""
+        surviving_bears: list[Bear] = []  # make a new list of surviving bears
         for bear in self.bears:
-            if bear.hunger_score >= 0:
-                surviving_bears.append(bear)
+            if bear.hunger_score >= 0:  # if the bear isnt starved
+                surviving_bears.append(bear)  # add to surviving bears list
 
         self.bears = surviving_bears
 
         return None
 
     def repopulate_fish(self):
-        num_new_fish = len(self.fish) // 2 * 4
+        """To simulate the breeding of fish."""
+        num_fish = len(self.fish)  # the current number of fish
+        num_pairs = num_fish // 2  # number of fish divided by 2 b/c of mating
 
-        for index in range(num_new_fish):  # type: ignore
+        for _ in range(num_pairs * 4):  # each pair produces 4 offspring
             self.fish.append(Fish())
         return None
 
     def repopulate_bears(self):
-        num_new_bears = len(self.bears) // 2
+        """To simulate the breeding of bears."""
+        num_bears = len(self.bears)  # the current number of bears
+        num_pairs = num_bears // 2  # the number of bears divided by 2 b/c of mating
 
-        for index in range(num_new_bears):  # type: ignore
-            self.bears.append(Bear())
+        for _ in range(0, num_pairs):
+            self.bears.append(Bear())  # add one bear to the population
         return None
 
     def view_river(self):
+        """To check how many fish and bears there are on a certain day."""
         print(f"~~~ Day {self.day}: ~~~")
         print(f"Fish population: {len(self.fish)}")
         print(f"Bear Population: {len(self.bears)}")
         return None
 
     def one_river_day(self):
-        """Simulate one day of life in the river"""
+        """Simulate one day of life in the river."""
         # Increase day by 1
         self.day += 1
         # Simulate one day for all Bears
